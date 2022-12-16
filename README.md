@@ -5,7 +5,7 @@ full code copied from :
 https://docs.python.org/3.8/howto/logging-cookbook.html#sending-and-receiving-logging-events-across-a-network
 
 ```python
-pip install git+https://github.com/pankajthekush/watchman.git
+pip install --upgrade git+https://github.com/pankajthekush/watchman.git
 ```
 
 Ensure to deploy this on a instance/machine which can be connected by the machine who want to push the logs to it

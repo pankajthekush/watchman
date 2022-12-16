@@ -22,6 +22,7 @@ class LogRecordStreamHandler(socketserver.StreamRequestHandler):
         """
         while True:
             chunk = self.connection.recv(4)
+            peer_name = self.connection.getpeername()[0]
             if len(chunk) < 4:
                 break
             slen = struct.unpack('>L', chunk)[0]
@@ -29,6 +30,7 @@ class LogRecordStreamHandler(socketserver.StreamRequestHandler):
             while len(chunk) < slen:
                 chunk = chunk + self.connection.recv(slen - len(chunk))
             obj = self.unPickle(chunk)
+            obj['peer']  = peer_name
             record = logging.makeLogRecord(obj)
             self.handleLogRecord(record)
 
@@ -77,7 +79,7 @@ class LogRecordSocketReceiver(socketserver.ThreadingTCPServer):
 
 def main():
     logging.basicConfig(
-        format='%(relativeCreated)5d %(name)-15s %(levelname)-8s %(message)s')
+        format='%(relativeCreated)5d %(name)-15s %(peer)s %(levelname)-8s %(message)s')
     tcpserver = LogRecordSocketReceiver()
     print('About to start TCP server...')
     tcpserver.serve_until_stopped()
